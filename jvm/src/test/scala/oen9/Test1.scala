@@ -1,4 +1,4 @@
-package oen9
+package oen9.jvm
 
 import org.junit.Test
 import org.junit.Assert.*
