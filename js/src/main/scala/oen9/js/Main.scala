@@ -1,7 +1,20 @@
 package oen9
 
-@main def hello: Unit =
-  println("Hello world!")
-  println(msg)
+import org.scalajs.dom.document
+import org.scalajs.dom
+import scala.scalajs.LinkingInfo
 
-def msg = "I was compiled by Scala 3. :)"
+object Main {
+  def main(args: Array[String]): Unit = {
+    if (LinkingInfo.developmentMode) {
+      println("dev mode")
+    }
+    val text = "Hello world!"
+    println(text)
+
+    val target   = document.getElementById("main")
+    val textNode = document.createElement("div")
+    textNode.textContent = text
+    target.appendChild(textNode)
+  }
+}

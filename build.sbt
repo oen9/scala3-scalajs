@@ -1,4 +1,5 @@
 val scala3Version = "3.0.2"
+val scala2Version = "2.13.6"
 
 lazy val sharedSettings = Seq(
   libraryDependencies ++= Seq(),
@@ -16,7 +17,10 @@ lazy val sharedSettings = Seq(
 )
 
 lazy val jsSettings = Seq(
-  libraryDependencies ++= Seq(),
+  scalaVersion := scala2Version,
+  libraryDependencies ++= Seq(
+    "org.scala-js" %%% "scalajs-dom" % "1.2.0" // scala3 not supported
+  ),
   Compile / npmDependencies ++= Seq(),
   scalaJSUseMainModuleInitializer := true,
   webpack / version               := "4.46.0",
