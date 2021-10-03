@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: scala3-scalajs-http
+spec:
+  ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: scala3-scalajs
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: scala3-scalajs
+  name: scala3-scalajs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scala3-scalajs
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: scala3-scalajs
+    spec:
+      containers:
+      - image: oen9/scala3-scalajs:0.0.1
+        name: scala3-scalajs
+        livenessProbe: # restart after fail
+            httpGet:
+              path: /hostname
+              port: 8080
+            initialDelaySeconds: 30
+        readinessProbe: # don't use when fail and wait for recover
+            httpGet:
+              path: /hostname
+              port: 8080
+            initialDelaySeconds: 30
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+---
