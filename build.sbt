@@ -92,8 +92,10 @@ lazy val appJVM = app.jvm
       f.data -> s"assets/${f.data.getName()}"
     },
     Universal / mappings ++= Seq(
-      (appJS / Compile / target).value / ("scala-" + scalaBinaryVersion.value) / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "css" / "bootstrap.min.css" -> "assets/bootstrap.min.css",
-      (appJS / Compile / target).value / ("scala-" + scalaBinaryVersion.value) / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "js" / "bootstrap.bundle.min.js" -> "assets/bootstrap.bundle.min.js"
+      (appJS / Compile / target).value / ("scala-" + (appJS / scalaBinaryVersion).value) / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "css" / "bootstrap.min.css" -> "assets/bootstrap.min.css",
+      (appJS / Compile / target).value / ("scala-" + (appJS / scalaBinaryVersion).value) / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "css" / "bootstrap.min.css.map" -> "assets/bootstrap.min.css.map",
+      (appJS / Compile / target).value / ("scala-" + (appJS / scalaBinaryVersion).value) / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "js" / "bootstrap.bundle.min.js" -> "assets/bootstrap.bundle.min.js",
+      (appJS / Compile / target).value / ("scala-" + (appJS / scalaBinaryVersion).value) / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "js" / "bootstrap.bundle.min.js.map" -> "assets/bootstrap.bundle.min.js.map"
     ),
     bashScriptExtraDefines += """addJava "-Dassets=${app_home}/../assets""""
   )
