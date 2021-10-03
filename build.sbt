@@ -18,7 +18,7 @@ lazy val sharedSettings = Seq(
   libraryDependencies ++= Seq(),
   name             := "scala3-scalajs",
   scalaVersion     := scala3Version,
-  version          := "0.1.0-SNAPSHOT",
+  version          := "0.0.1",
   organization     := "com.github.oen9",
   organizationName := "oen9",
   scalacOptions ++= Seq(
@@ -86,6 +86,7 @@ lazy val appJS = app.js
 
 lazy val appJVM = app.jvm
   .enablePlugins(JavaAppPackaging)
+  .enablePlugins(DockerPlugin)
   .settings(
     Compile / unmanagedResourceDirectories += (appJS / Compile / resourceDirectory).value,
     Universal / mappings ++= (appJS / Compile / fullOptJS / webpack).value.map { f =>
@@ -97,7 +98,11 @@ lazy val appJVM = app.jvm
       (appJS / Compile / target).value / ("scala-" + (appJS / scalaBinaryVersion).value) / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "js" / "bootstrap.bundle.min.js" -> "assets/bootstrap.bundle.min.js",
       (appJS / Compile / target).value / ("scala-" + (appJS / scalaBinaryVersion).value) / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "js" / "bootstrap.bundle.min.js.map" -> "assets/bootstrap.bundle.min.js.map"
     ),
-    bashScriptExtraDefines += """addJava "-Dassets=${app_home}/../assets""""
+    bashScriptExtraDefines += """addJava "-Dassets=${app_home}/../assets"""",
+    dockerExposedPorts     := Seq(8080),
+    dockerBaseImage        := "oen9/sjdk:0.3",
+    Docker / daemonUserUid := None,
+    Docker / daemonUser    := "root"
   )
 
 disablePlugins(RevolverPlugin)
