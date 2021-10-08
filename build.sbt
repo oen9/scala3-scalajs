@@ -14,6 +14,8 @@ val ver = new {
 val scala3Version = "3.0.2"
 val scala2Version = "2.13.6"
 
+ThisBuild / versionScheme := Some("early-semver")
+
 lazy val sharedSettings = Seq(
   libraryDependencies ++= Seq(),
   name             := "scala3-scalajs",
@@ -44,7 +46,9 @@ lazy val jsSettings = Seq(
     "react-dom"        -> "17.0.2",
     "react-popper"     -> "2.2.5",
     "react-router-dom" -> "5.3.0",
-    "bootstrap"        -> "5.1.1"
+    "bootstrap"        -> "5.1.1",
+    "chart.js"         -> "3.5.1",
+    "react-chartjs-2"  -> "3.0.5"
   ),
   scalaJSUseMainModuleInitializer := true,
   webpack / version               := "4.46.0",
@@ -68,8 +72,7 @@ lazy val jvmSettings = Seq(
   ),
   libraryDependencies ++= Seq(
     "com.novocode" % "junit-interface" % "0.11" % "test"
-  ),
-  target := baseDirectory.value / ".." / "target"
+  )
 )
 
 lazy val app =
@@ -86,23 +89,24 @@ lazy val appJS = app.js
 
 lazy val appJVM = app.jvm
   .enablePlugins(JavaAppPackaging)
-  .enablePlugins(DockerPlugin)
   .settings(
     Compile / unmanagedResourceDirectories += (appJS / Compile / resourceDirectory).value,
     Universal / mappings ++= (appJS / Compile / fullOptJS / webpack).value.map { f =>
       f.data -> s"assets/${f.data.getName()}"
     },
     Universal / mappings ++= Seq(
-      (appJS / Compile / target).value / ("scala-" + (appJS / scalaBinaryVersion).value) / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "css" / "bootstrap.min.css" -> "assets/bootstrap.min.css",
-      (appJS / Compile / target).value / ("scala-" + (appJS / scalaBinaryVersion).value) / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "css" / "bootstrap.min.css.map" -> "assets/bootstrap.min.css.map",
-      (appJS / Compile / target).value / ("scala-" + (appJS / scalaBinaryVersion).value) / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "js" / "bootstrap.bundle.min.js" -> "assets/bootstrap.bundle.min.js",
-      (appJS / Compile / target).value / ("scala-" + (appJS / scalaBinaryVersion).value) / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "js" / "bootstrap.bundle.min.js.map" -> "assets/bootstrap.bundle.min.js.map"
+      (appJS / crossTarget).value / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "css" / "bootstrap.min.css" -> "assets/bootstrap.min.css",
+      (appJS / crossTarget).value / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "css" / "bootstrap.min.css.map" -> "assets/bootstrap.min.css.map",
+      (appJS / crossTarget).value / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "js" / "bootstrap.bundle.min.js" -> "assets/bootstrap.bundle.min.js",
+      (appJS / crossTarget).value / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "js" / "bootstrap.bundle.min.js.map" -> "assets/bootstrap.bundle.min.js.map"
     ),
     bashScriptExtraDefines += """addJava "-Dassets=${app_home}/../assets"""",
-    dockerExposedPorts     := Seq(8080),
-    dockerBaseImage        := "oen9/sjdk:0.3",
-    Docker / daemonUserUid := None,
-    Docker / daemonUser    := "root"
+    dockerExposedPorts := Seq(8080),
+    dockerBaseImage    := "oen9/sjdk:0.3",
+    //Docker / dockerRepository := Some("index.docker.io"),
+    Docker / dockerUsername := Some("oen9"),
+    Docker / daemonUserUid  := None,
+    Docker / daemonUser     := "root"
   )
 
 disablePlugins(RevolverPlugin)
