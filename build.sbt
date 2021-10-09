@@ -47,7 +47,6 @@ lazy val jsSettings = Seq(
     "react-popper"     -> "2.2.5",
     "react-router-dom" -> "5.3.0",
     "bootstrap"        -> "5.1.1",
-    "chart.js"         -> "3.5.1",
     "react-chartjs-2"  -> "3.0.5"
   ),
   scalaJSUseMainModuleInitializer := true,
@@ -101,9 +100,8 @@ lazy val appJVM = app.jvm
       (appJS / crossTarget).value / "scalajs-bundler" / "main" / "node_modules" / "bootstrap" / "dist" / "js" / "bootstrap.bundle.min.js.map" -> "assets/bootstrap.bundle.min.js.map"
     ),
     bashScriptExtraDefines += """addJava "-Dassets=${app_home}/../assets"""",
-    dockerExposedPorts := Seq(8080),
-    dockerBaseImage    := "oen9/sjdk:0.3",
-    //Docker / dockerRepository := Some("index.docker.io"),
+    dockerExposedPorts      := Seq(8080),
+    dockerBaseImage         := "oen9/sjdk:0.3",
     Docker / dockerUsername := Some("oen9"),
     Docker / daemonUserUid  := None,
     Docker / daemonUser     := "root"
