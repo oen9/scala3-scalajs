@@ -12,13 +12,24 @@ object ReactChartjs2 extends js.Object {
   val Line: js.Object     = js.native
 }
 
+case class DataRecord(x: String, y: Double)
+case class DataSet(
+  data: Seq[DataRecord],
+  label: String = "",
+  fill: Boolean = false,
+  borderColor: String = "",
+  backgroundColor: String = "",
+  tension: Double = 0
+)
+case class ChartData(datasets: Seq[DataSet])
+
 @react object Doughnut extends ExternalComponent {
-  case class Props(data: js.Object)
+  case class Props(data: ChartData)
   override val component = ReactChartjs2.Doughnut
 }
 
 @react object Line extends ExternalComponent {
-  case class Props(data: js.Object)
+  case class Props(data: ChartData)
   override val component = ReactChartjs2.Line
 }
 
