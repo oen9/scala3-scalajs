@@ -47,6 +47,7 @@ lazy val jsSettings = Seq(
     "react-popper"     -> "2.2.5",
     "react-router-dom" -> "5.3.0",
     "bootstrap"        -> "5.1.1",
+    "chart.js"         -> "3.5.1",
     "react-chartjs-2"  -> "3.0.5"
   ),
   scalaJSUseMainModuleInitializer := true,
