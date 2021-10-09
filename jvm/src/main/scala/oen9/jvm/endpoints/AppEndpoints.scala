@@ -1,29 +1,36 @@
 package oen9.jvm.endpoints
 
-import cats.effect.Sync
+import cats.effect.Async
 import cats.implicits.*
-import io.circe.generic.auto.*
-import io.circe.syntax.*
-import oen9.jvm.Model.*
+import oen9.jvm.Model.SrvInfo
 import org.http4s.HttpRoutes
-import org.http4s.circe.*
-import org.http4s.dsl.Http4sDsl
+import sttp.tapir._
+import sttp.tapir.generic.auto.*
+import sttp.tapir.json.circe.*
+import sttp.tapir.server.http4s.Http4sServerInterpreter
 
 import java.net.InetAddress
 
 object AppEndpoints:
-  def endpoints[F[_]: Sync](): HttpRoutes[F] =
-    val dsl = Http4sDsl[F]
-    import dsl._
+  val check = endpoint
+    .summary("is server alive?")
+    .get
+    .in("check")
+    .out(jsonBody[String])
 
-    HttpRoutes.of[F] {
-      case GET -> Root / "hostname" =>
-        for {
-          hostname <- Sync[F].delay(InetAddress.getLocalHost.getHostName)
-          srvInfo = SrvInfo(hostname = hostname)
-          result <- Ok(srvInfo.asJson)
-        } yield result
+  val hostname = endpoint
+    .summary("get hostname")
+    .get
+    .in("hostname")
+    .out(jsonBody[SrvInfo])
 
-      case GET -> Root / "hello" / name =>
-        Ok(s"Hello, $name.")
-    }
+  def checkRoute[F[_]: Async]() = Http4sServerInterpreter[F]().toRoutes(check)(_ => Async[F].pure("ok".asRight))
+  def hostnameRoute[F[_]: Async]() = Http4sServerInterpreter[F]().toRoutes(hostname)(_ =>
+    for {
+      hostname <- Async[F].delay(InetAddress.getLocalHost.getHostName)
+    } yield SrvInfo(hostname = hostname).asRight
+  )
+
+  def routes[F[_]: Async]() = checkRoute() <+>
+    hostnameRoute()
+  def endpoints = List(check, hostname)

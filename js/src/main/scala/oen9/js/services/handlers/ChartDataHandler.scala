@@ -10,7 +10,9 @@ import scala.scalajs.js.Date
 
 class ChartDataHandler[M](modelRW: ModelRW[M, Seq[DataRecord]]) extends ActionHandler(modelRW) {
   override def handle = { case GenerateMoreChartData =>
-    val nextId      = (new Date()).toISOString()
+    //val nextId      = (new Date()).toISOString()
+    val d           = new Date()
+    val nextId      = s"${d.getUTCHours()}h ${d.getUTCMinutes()}m ${d.getUTCSeconds()}s:${d.getUTCMilliseconds()}"
     val randomValue = scala.util.Random.nextInt(100)
     val newRecord   = DataRecord(x = s"$nextId", y = randomValue)
     val newValue    = value :+ newRecord

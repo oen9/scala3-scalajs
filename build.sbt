@@ -9,6 +9,7 @@ val ver = new {
   val logback        = "1.2.5"
   val circe          = "0.14.1"
   val typesafeConfig = "1.4.1"
+  val tapir          = "0.19.0-M11"
 }
 
 val scala3Version = "3.0.2"
@@ -58,17 +59,26 @@ lazy val jsSettings = Seq(
 
 lazy val jvmSettings = Seq(
   libraryDependencies ++= Seq(
-    "org.typelevel" %% "log4cats-core"       % ver.log4cats,
-    "org.typelevel" %% "log4cats-slf4j"      % ver.log4cats,
-    "ch.qos.logback" % "logback-classic"     % ver.logback,
-    "org.http4s"    %% "http4s-dsl"          % ver.http4s,
-    "org.http4s"    %% "http4s-blaze-server" % ver.http4s,
-    "org.http4s"    %% "http4s-blaze-client" % ver.http4s,
-    "org.http4s"    %% "http4s-circe"        % ver.http4s,
-    "org.typelevel" %% "cats-effect"         % ver.catsEffect,
-    "io.circe"      %% "circe-core"          % ver.circe,
-    "io.circe"      %% "circe-generic"       % ver.circe,
-    "com.typesafe"   % "config"              % ver.typesafeConfig
+    "org.http4s"                  %% "http4s-dsl"               % ver.http4s,
+    "org.http4s"                  %% "http4s-blaze-server"      % ver.http4s,
+    "org.http4s"                  %% "http4s-blaze-client"      % ver.http4s,
+    "org.http4s"                  %% "http4s-circe"             % ver.http4s,
+    "com.softwaremill.sttp.tapir" %% "tapir-core"               % ver.tapir,
+    "com.softwaremill.sttp.tapir" %% "tapir-json-circe"         % ver.tapir,
+    "com.softwaremill.sttp.tapir" %% "tapir-http4s-server"      % ver.tapir,
+    "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs"       % ver.tapir,
+    "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml" % ver.tapir,
+    "com.softwaremill.sttp.tapir" %% "tapir-redoc"              % ver.tapir,
+    "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui"         % ver.tapir
+  ),
+  libraryDependencies ++= Seq(
+    "org.typelevel" %% "log4cats-core"   % ver.log4cats,
+    "org.typelevel" %% "log4cats-slf4j"  % ver.log4cats,
+    "ch.qos.logback" % "logback-classic" % ver.logback,
+    "org.typelevel" %% "cats-effect"     % ver.catsEffect,
+    "io.circe"      %% "circe-core"      % ver.circe,
+    "io.circe"      %% "circe-generic"   % ver.circe,
+    "com.typesafe"   % "config"          % ver.typesafeConfig
   ),
   libraryDependencies ++= Seq(
     "com.novocode" % "junit-interface" % "0.11" % "test"

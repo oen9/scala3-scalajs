@@ -15,12 +15,12 @@ case class Clicks(count: Int)
 object AppCircuit extends Circuit[RootModel] {
   override protected def initialModel: RootModel = RootModel(
     chartDataRecords = Seq(
-      DataRecord(x = "2021-10-04T11:15:43.012Z", y = 65),
-      DataRecord(x = "2021-10-05T11:15:43.012Z", y = 59),
-      DataRecord(x = "2021-10-06T11:15:43.012Z", y = 80),
-      DataRecord(x = "2021-10-07T11:15:43.012Z", y = 81),
-      DataRecord(x = "2021-10-08T11:15:43.012Z", y = 56),
-      DataRecord(x = "2021-10-09T11:15:43.012Z", y = 55)
+      DataRecord(x = "10h 50m 49s:112", y = 65),
+      DataRecord(x = "10h 50m 50s:112", y = 59),
+      DataRecord(x = "10h 50m 51s:112", y = 80),
+      DataRecord(x = "10h 50m 52s:112", y = 81),
+      DataRecord(x = "10h 50m 53s:112", y = 56),
+      DataRecord(x = "10h 50m 54s:112", y = 55)
     )
   )
 
