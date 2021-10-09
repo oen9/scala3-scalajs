@@ -58,7 +58,7 @@ import slinky.web.html._
   def makeFooter() =
     footer(
       className := "footer mt-auto py-3 bg-light",
-      div(className := "container", span(className := "text-muted", "© 2021 oen"))
+      div(className := "container text-center", span(className := "text-muted", "© 2021 oen"))
     )
 
   val component = FunctionalComponent[Props] { props =>
