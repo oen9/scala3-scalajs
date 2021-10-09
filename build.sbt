@@ -3,7 +3,7 @@ val ver = new {
   val slinky = "0.6.8"
   val diode  = "1.1.14"
 
-  val http4s         = "0.23.4"
+  val http4s         = "0.23.5"
   val catsEffect     = "3.2.9"
   val log4cats       = "2.1.1"
   val logback        = "1.2.5"
@@ -60,8 +60,7 @@ lazy val jsSettings = Seq(
 lazy val jvmSettings = Seq(
   libraryDependencies ++= Seq(
     "org.http4s"                  %% "http4s-dsl"               % ver.http4s,
-    "org.http4s"                  %% "http4s-blaze-server"      % ver.http4s,
-    "org.http4s"                  %% "http4s-blaze-client"      % ver.http4s,
+    "org.http4s"                  %% "http4s-ember-server"      % ver.http4s,
     "org.http4s"                  %% "http4s-circe"             % ver.http4s,
     "com.softwaremill.sttp.tapir" %% "tapir-core"               % ver.tapir,
     "com.softwaremill.sttp.tapir" %% "tapir-json-circe"         % ver.tapir,

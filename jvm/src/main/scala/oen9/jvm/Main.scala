@@ -45,16 +45,21 @@ object Main extends IOApp, Logging:
         Http4sServerInterpreter().toRoutes(Redoc(title = "scala3-scalajs", yaml = yaml, prefix = List("redoc")))
     ).orNotFound
 
-    import org.http4s.blaze.server._
+    import org.http4s.ember.server._
+    import com.comcast.ip4s.port
+    import com.comcast.ip4s.Port
+    import com.comcast.ip4s.Host
     for {
       _   <- Logger[F].trace("Starting http4s app")
       ec  <- Async[F].executionContext
       cfg <- AppConfig.load()
-      _ <- BlazeServerBuilder[F](ec)
-        .bindHttp(cfg.http.port, cfg.http.host)
+      _ <- EmberServerBuilder
+        .default[F]
+        .withHostOption(Host.fromString(cfg.http.host))
+        .withPort(Port.fromInt(cfg.http.port).getOrElse(port"8080"))
         .withHttpApp(httpApp)
-        .resource
-        .use(_ => Async[F].never)
+        .build
+        .useForever
     } yield ()
 
 def msg = "I was compiled by Scala 3. :)"
