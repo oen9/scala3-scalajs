@@ -61,6 +61,7 @@ lazy val jvmSettings = Seq(
   libraryDependencies ++= Seq(
     "org.http4s"                  %% "http4s-dsl"               % ver.http4s,
     "org.http4s"                  %% "http4s-ember-server"      % ver.http4s,
+    "org.http4s"                  %% "http4s-blaze-server"      % ver.http4s,
     "org.http4s"                  %% "http4s-circe"             % ver.http4s,
     "com.softwaremill.sttp.tapir" %% "tapir-core"               % ver.tapir,
     "com.softwaremill.sttp.tapir" %% "tapir-json-circe"         % ver.tapir,

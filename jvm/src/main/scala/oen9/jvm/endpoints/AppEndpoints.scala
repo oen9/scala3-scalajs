@@ -34,3 +34,32 @@ object AppEndpoints:
   def routes[F[_]: Async]() = checkRoute() <+>
     hostnameRoute()
   def endpoints = List(check, hostname)
+
+  // this doesn't work, no websock upgrade (Unknown connection header: 'Upgrade'. Closing connection upon completion.)
+  object tapirWebsock:
+    import sttp.capabilities.fs2.Fs2Streams
+    import fs2.Stream
+    import scala.concurrent.duration._
+    def randomStream[F[_]]() = endpoint
+      .in("tapirwebsock")
+      .out(webSocketBody[String, CodecFormat.TextPlain, String, CodecFormat.Json](Fs2Streams[F]))
+    def randomStreamRoute[F[_]: Async]() =
+      Http4sServerInterpreter[F]().toRoutes(randomStream[F]())(_ =>
+        Async[F].delay(((_: Stream[F, String]) => Stream.awakeEvery(2.second).map(x => s"tapir $x")).asRight)
+      )
+  object tapirRawWebsock:
+    import sttp.capabilities.fs2.Fs2Streams
+    import fs2.Stream
+    import scala.concurrent.duration._
+    import sttp.ws.WebSocketFrame
+    def randomStream[F[_]]() = endpoint
+      .in("tapirrawwebsock")
+      .out(webSocketBodyRaw(Fs2Streams[F]))
+    def randomStreamRoute[F[_]: Async]() =
+      Http4sServerInterpreter[F]().toRoutes(randomStream[F]())(_ =>
+        Async[F].delay(
+          (
+            (_: Stream[F, WebSocketFrame]) => Stream.awakeEvery(2.second).map(x => WebSocketFrame.text(s"tapir raw $x"))
+          ).asRight
+        )
+      )

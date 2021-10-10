@@ -7,7 +7,10 @@ import cats.effect.IOApp
 import cats.implicits.*
 import oen9.jvm.endpoints.AppEndpoints
 import oen9.jvm.endpoints.StaticEndpoints
+import oen9.jvm.endpoints.WebsockEndpoints
+import org.http4s.HttpApp
 import org.http4s.implicits.*
+import org.http4s.server.websocket.WebSocketBuilder2
 import org.typelevel.log4cats.Logger
 import sttp.tapir.docs.openapi.OpenAPIDocsInterpreter
 import sttp.tapir.openapi.Server
@@ -38,27 +41,46 @@ object Main extends IOApp, Logging:
       )
       .toYaml
 
-    val httpApp = (
+    def httpApp(websockBuilder: WebSocketBuilder2[F]) = (
       AppEndpoints.routes() <+>
+        AppEndpoints.tapirWebsock.randomStreamRoute() <+>
+        AppEndpoints.tapirRawWebsock.randomStreamRoute() <+>
+        WebsockEndpoints.routes(websockBuilder) <+>
         StaticEndpoints.endpoints(cfg.assets) <+>
         Http4sServerInterpreter().toRoutes(SwaggerUI(yaml = yaml)) <+>
         Http4sServerInterpreter().toRoutes(Redoc(title = "scala3-scalajs", yaml = yaml, prefix = List("redoc")))
     ).orNotFound
 
+    startEmber(httpApp)
+  //startBlaze(httpApp)
+
+  def startEmber[F[_]: Async](httpApp: WebSocketBuilder2[F] => HttpApp[F]): F[Unit] =
     import org.http4s.ember.server._
     import com.comcast.ip4s.port
     import com.comcast.ip4s.Port
     import com.comcast.ip4s.Host
     for {
-      _   <- Logger[F].trace("Starting http4s app")
+      _   <- Logger[F].trace("Starting http4s ember app")
       ec  <- Async[F].executionContext
       cfg <- AppConfig.load()
       _ <- EmberServerBuilder
         .default[F]
         .withHostOption(Host.fromString(cfg.http.host))
         .withPort(Port.fromInt(cfg.http.port).getOrElse(port"8080"))
-        .withHttpApp(httpApp)
+        .withHttpWebSocketApp(httpApp)
         .build
+        .useForever
+    } yield ()
+
+  def startBlaze[F[_]: Async](httpApp: WebSocketBuilder2[F] => HttpApp[F]): F[Unit] =
+    import org.http4s.blaze.server._
+    for {
+      _   <- Logger[F].trace("Starting http4s blaze app")
+      cfg <- AppConfig.load()
+      _ <- BlazeServerBuilder[F]
+        .bindHttp(cfg.http.port, cfg.http.host)
+        .withHttpWebSocketApp(httpApp)
+        .resource
         .useForever
     } yield ()
 
