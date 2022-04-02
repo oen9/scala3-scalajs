@@ -5,3 +5,4 @@ target/
 .bsp
 .metals
 metals.sbt
+js/package-lock.json

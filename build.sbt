@@ -1,6 +1,6 @@
 val ver = new {
-  val dom    = "1.2.0"
-  val slinky = "0.6.8"
+  val dom    = "2.0.0"
+  val slinky = "0.7.2"
   val diode  = "1.1.14"
 
   val http4s         = "0.23.11"
@@ -52,7 +52,7 @@ lazy val jsSettings = Seq(
     "react-chartjs-2"  -> "3.0.5"
   ),
   scalaJSUseMainModuleInitializer := true,
-  webpack / version               := "4.46.0",
+  webpack / version               := "5.71.0",
   webpackBundlingMode             := BundlingMode.Application,
   fastOptJS / webpackBundlingMode := BundlingMode.LibraryOnly()
 )

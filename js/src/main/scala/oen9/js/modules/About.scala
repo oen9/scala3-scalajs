@@ -21,7 +21,7 @@ import slinky.core.facade.Fragment
         a(
           target := "_blank",
           href   := "https://github.com/oen9/scala3-scalajs",
-          "https://github.com/oen9/full-stack-zio"
+          "https://github.com/oen9/scala3-scalajs"
         )
       )
     ),
