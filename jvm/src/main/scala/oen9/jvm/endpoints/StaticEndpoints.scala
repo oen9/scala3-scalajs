@@ -2,7 +2,7 @@ package oen9.jvm.endpoints
 
 import cats.effect.Async
 import cats.implicits.*
-import io.circe.generic.auto.*
+//import io.circe.generic.auto.*
 import io.circe.syntax.*
 import oen9.jvm.Model.*
 import org.http4s.HttpRoutes

@@ -41,18 +41,17 @@ object Main extends IOApp, Logging:
       )
       .toYaml
 
-    def httpApp(websockBuilder: WebSocketBuilder2[F]) = (
+    def httpApp(websockBuilder: WebSocketBuilder2[F])(using async: Async[F]) = (
       AppEndpoints.routes() <+>
-        AppEndpoints.tapirWebsock.randomStreamRoute() <+>
-        AppEndpoints.tapirRawWebsock.randomStreamRoute() <+>
+        AppEndpoints.tapirWebsock2.wsRoutes()(async)(websockBuilder) <+>
         WebsockEndpoints.routes(websockBuilder) <+>
         StaticEndpoints.endpoints(cfg.assets) <+>
         Http4sServerInterpreter().toRoutes(SwaggerUI(yaml = yaml)) <+>
         Http4sServerInterpreter().toRoutes(Redoc(title = "scala3-scalajs", yaml = yaml, prefix = List("redoc")))
     ).orNotFound
 
-    startEmber(httpApp)
-  //startBlaze(httpApp)
+    if (cfg.enableEmber) startEmber(httpApp)
+    else startBlaze(httpApp)
 
   def startEmber[F[_]: Async](httpApp: WebSocketBuilder2[F] => HttpApp[F]): F[Unit] =
     import org.http4s.ember.server._

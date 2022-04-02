@@ -3,17 +3,17 @@ val ver = new {
   val slinky = "0.6.8"
   val diode  = "1.1.14"
 
-  val http4s         = "0.23.5"
-  val catsEffect     = "3.2.9"
-  val log4cats       = "2.1.1"
+  val http4s         = "0.23.11"
+  val catsEffect     = "3.3.9"
+  val log4cats       = "2.2.0"
   val logback        = "1.2.5"
   val circe          = "0.14.1"
   val typesafeConfig = "1.4.1"
-  val tapir          = "0.19.0-M11"
+  val tapir          = "0.20.0-M10"
 }
 
-val scala3Version = "3.0.2"
-val scala2Version = "2.13.6"
+val scala3Version = "3.1.1"
+val scala2Version = "2.13.8"
 
 ThisBuild / versionScheme := Some("early-semver")
 
@@ -21,7 +21,7 @@ lazy val sharedSettings = Seq(
   libraryDependencies ++= Seq(),
   name             := "scala3-scalajs",
   scalaVersion     := scala3Version,
-  version          := "0.0.1",
+  version          := "0.0.2",
   organization     := "com.github.oen9",
   organizationName := "oen9",
   scalacOptions ++= Seq(
@@ -47,7 +47,7 @@ lazy val jsSettings = Seq(
     "react-dom"        -> "17.0.2",
     "react-popper"     -> "2.2.5",
     "react-router-dom" -> "5.3.0",
-    "bootstrap"        -> "5.1.1",
+    "bootstrap"        -> "5.1.3",
     "chart.js"         -> "3.5.1",
     "react-chartjs-2"  -> "3.0.5"
   ),
@@ -81,7 +81,7 @@ lazy val jvmSettings = Seq(
     "com.typesafe"   % "config"          % ver.typesafeConfig
   ),
   libraryDependencies ++= Seq(
-    "com.novocode" % "junit-interface" % "0.11" % "test"
+    "org.scalameta" %% "munit" % "0.7.29" % Test
   )
 )
 

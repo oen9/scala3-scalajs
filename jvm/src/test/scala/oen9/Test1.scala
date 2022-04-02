@@ -1,8 +1,10 @@
 package oen9.jvm
 
-import org.junit.Test
-import org.junit.Assert.*
-
-class Test1:
-  @Test def t1(): Unit =
-    assertEquals("I was compiled by Scala 3. :)", msg)
+// For more information on writing tests, see
+// https://scalameta.org/munit/docs/getting-started.html
+class Test01 extends munit.FunSuite:
+  test("example test that succeeds") {
+    val obtained = 42
+    val expected = 42
+    assertEquals(obtained, expected)
+  }
